@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Speech to Text</title>
+    <title>Speech to Text (Multi-language)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,7 +13,7 @@
         h1 {
             color: #333;
         }
-        button {
+        button, select {
             padding: 10px 20px;
             font-size: 16px;
             margin: 10px;
@@ -41,20 +41,32 @@
             white-space: pre-wrap;
             text-align: left;
         }
+        select {
+            background-color: #eee;
+        }
     </style>
 </head>
 <body>
     <h1>Speech to Text</h1>
+    
+    <select id="languageSelect">
+        <option value="en-US">English</option>
+        <option value="hi-IN">Hindi</option>
+        <option value="ne-NP">Nepali</option>
+    </select>
+    
     <button id="startBtn">Start Listening</button>
     <button id="copyBtn">Copy Text</button>
+    
     <div id="result"></div>
 
     <script>
         const startBtn = document.getElementById('startBtn');
         const copyBtn = document.getElementById('copyBtn');
+        const languageSelect = document.getElementById('languageSelect');
         const resultDiv = document.getElementById('result');
 
-        // Load previous session text if any
+        // Load existing session text
         resultDiv.textContent = sessionStorage.getItem('speechText') || '';
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -67,6 +79,8 @@
             recognition.interimResults = true;
 
             startBtn.addEventListener('click', () => {
+                recognition.lang = languageSelect.value;
+
                 if (startBtn.textContent === 'Start Listening') {
                     recognition.start();
                     startBtn.textContent = 'Stop Listening';
